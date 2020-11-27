@@ -9,23 +9,31 @@
 /* Begin PBXBuildFile section */
 		BFFDE3EE2570D14300F70E80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */; };
 		BFFDE3F02570D14300F70E80 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */; };
-		BFFDE3F22570D14300F70E80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3F12570D14300F70E80 /* ViewController.swift */; };
 		BFFDE3F52570D14300F70E80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFFDE3F32570D14300F70E80 /* Main.storyboard */; };
 		BFFDE3F82570D14300F70E80 /* SearchDramas.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3F62570D14300F70E80 /* SearchDramas.xcdatamodeld */; };
 		BFFDE3FA2570D14500F70E80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFFDE3F92570D14500F70E80 /* Assets.xcassets */; };
 		BFFDE3FD2570D14500F70E80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFFDE3FB2570D14500F70E80 /* LaunchScreen.storyboard */; };
+		BFFDE40C2570D40800F70E80 /* ApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE40B2570D40800F70E80 /* ApiRepository.swift */; };
+		BFFDE4102570DE8300F70E80 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE40F2570DE8300F70E80 /* DataProvider.swift */; };
+		BFFDE4122570DF7700F70E80 /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE4112570DF7700F70E80 /* Drama.swift */; };
+		BFFDE41A2570E4D400F70E80 /* DramaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE4192570E4D400F70E80 /* DramaDetailViewController.swift */; };
+		BFFDE41C2570E50500F70E80 /* DramaListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE41B2570E50500F70E80 /* DramaListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BFFDE3EA2570D14300F70E80 /* SearchDramas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchDramas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		BFFDE3F12570D14300F70E80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BFFDE3F42570D14300F70E80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BFFDE3F72570D14300F70E80 /* SearchDramas.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SearchDramas.xcdatamodel; sourceTree = "<group>"; };
 		BFFDE3F92570D14500F70E80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BFFDE3FC2570D14500F70E80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BFFDE3FE2570D14500F70E80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BFFDE40B2570D40800F70E80 /* ApiRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRepository.swift; sourceTree = "<group>"; };
+		BFFDE40F2570DE8300F70E80 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		BFFDE4112570DF7700F70E80 /* Drama.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
+		BFFDE4192570E4D400F70E80 /* DramaDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaDetailViewController.swift; sourceTree = "<group>"; };
+		BFFDE41B2570E50500F70E80 /* DramaListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,16 +66,52 @@
 		BFFDE3EC2570D14300F70E80 /* SearchDramas */ = {
 			isa = PBXGroup;
 			children = (
+				BFFDE3FE2570D14500F70E80 /* Info.plist */,
+				BFFDE4092570D3C500F70E80 /* Data */,
+				BFFDE40A2570D3E000F70E80 /* Repository */,
+				BFFDE4052570D2BD00F70E80 /* controllers */,
+				BFFDE4082570D3A100F70E80 /* Resources */,
+			);
+			path = SearchDramas;
+			sourceTree = "<group>";
+		};
+		BFFDE4052570D2BD00F70E80 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				BFFDE41B2570E50500F70E80 /* DramaListViewController.swift */,
+				BFFDE4192570E4D400F70E80 /* DramaDetailViewController.swift */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		BFFDE4082570D3A100F70E80 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */,
 				BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */,
-				BFFDE3F12570D14300F70E80 /* ViewController.swift */,
 				BFFDE3F32570D14300F70E80 /* Main.storyboard */,
 				BFFDE3F92570D14500F70E80 /* Assets.xcassets */,
 				BFFDE3FB2570D14500F70E80 /* LaunchScreen.storyboard */,
-				BFFDE3FE2570D14500F70E80 /* Info.plist */,
-				BFFDE3F62570D14300F70E80 /* SearchDramas.xcdatamodeld */,
 			);
-			path = SearchDramas;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		BFFDE4092570D3C500F70E80 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				BFFDE40F2570DE8300F70E80 /* DataProvider.swift */,
+				BFFDE3F62570D14300F70E80 /* SearchDramas.xcdatamodeld */,
+				BFFDE4112570DF7700F70E80 /* Drama.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		BFFDE40A2570D3E000F70E80 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				BFFDE40B2570D40800F70E80 /* ApiRepository.swift */,
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,10 +185,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFFDE3F22570D14300F70E80 /* ViewController.swift in Sources */,
+				BFFDE41C2570E50500F70E80 /* DramaListViewController.swift in Sources */,
+				BFFDE41A2570E4D400F70E80 /* DramaDetailViewController.swift in Sources */,
+				BFFDE4102570DE8300F70E80 /* DataProvider.swift in Sources */,
+				BFFDE40C2570D40800F70E80 /* ApiRepository.swift in Sources */,
 				BFFDE3EE2570D14300F70E80 /* AppDelegate.swift in Sources */,
 				BFFDE3F02570D14300F70E80 /* SceneDelegate.swift in Sources */,
 				BFFDE3F82570D14300F70E80 /* SearchDramas.xcdatamodeld in Sources */,
+				BFFDE4122570DF7700F70E80 /* Drama.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
