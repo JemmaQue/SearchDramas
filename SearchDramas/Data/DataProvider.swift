@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 
 let dataErrorDomain = "dataErrorDomain"
+let searchWord = "SearchWord"
 
 enum DataErrorCode: NSInteger {
     case missingData = 100
@@ -33,6 +34,7 @@ struct ResponseData: Codable {
 class DataProvider: NSObject {
     var dramas: [Drama] = []
     var dramasChanged: ([Drama]) -> Void = {_ in }
+    var filteredDramas: [Drama] = []
     private let repository = ApiRepository.shared
     private let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
     var viewContext: NSManagedObjectContext {
@@ -55,6 +57,19 @@ class DataProvider: NSObject {
             self.dramas = results.map { Drama($0) }
             self.dramasChanged(self.dramas)
         }
+    }
+    
+    func updatefilteredDramas(_ searchText: String) {
+        filteredDramas = dramas.filter {
+        ($0.name).localizedCaseInsensitiveContains(searchText) }
+    }
+    
+    func fetchSearchWord() -> String {
+        return UserDefaults.standard.object(forKey: searchWord) as? String ?? String()
+    }
+    
+    func saveSearchWord(_ searchText: String) {
+        UserDefaults().setValue(searchText, forKey: searchWord)
     }
 
 }
