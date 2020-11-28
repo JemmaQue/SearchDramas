@@ -127,10 +127,9 @@ extension DramaListViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DramaListCellID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: DramaListCellID, for: indexPath) as! DramaListCell
         let drama = (searchController.isActive) ? dataProvider.filteredDramas[indexPath.row]: dataProvider.fetchedResultsController.object(at: indexPath)
-        cell.textLabel?.text = drama.name
-        cell.detailTextLabel?.text = drama.rating
+        cell.feed(drama)
         return cell
     }
 }

@@ -29,29 +29,51 @@ struct DramaObject {
 }
 
 class Drama: NSManagedObject {
+    @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var rating: String
-       
-    class func entity() -> String {
+    @NSManaged var thumbData: Data
+    @NSManaged var createdDate: Date
+    
+    static func entity() -> String {
         return "Drama"
     }
     
-    func update(_ result: ResponseData) {
-        self.name = result.name
-        self.rating = String(result.rating)
+    class func dateFormatter() -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        return dateFormatter
     }
     
- 
-    class func createFetchRequest() -> NSFetchRequest<Drama> {
+    func update(_ result: ResponseData) {
+        self.id = String(result.drama_id)
+        self.name = result.name
+        self.rating = String(result.rating)
+        self.createdDate = ResponseData.dateFormatter().date(from: result.created_at)!
+        do {
+            self.thumbData = try Data(contentsOf: URL(string: result.thumb)!)
+        } catch {
+            print("Dramas: Could not fetchImage. \(self.id)")
+        }
+        
+    }
+    
+    static func createFetchRequest() -> NSFetchRequest<Drama> {
         let fetchRequest = NSFetchRequest<Drama>(entityName:Drama.entity())
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: DramaDefine.name, ascending:true)]
-        fetchRequest.propertiesToFetch = [DramaDefine.name, DramaDefine.rating]
         return fetchRequest
     }
     
-    class func createbatchDeleteRequest() -> NSBatchDeleteRequest {
+    static func createbatchDeleteRequest() -> NSBatchDeleteRequest {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Drama.entity())
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         return deleteRequest
+    }
+    
+    static func createUpdateRequest(id: String) -> NSFetchRequest<Drama> {
+        let fetchRequest: NSFetchRequest<Drama> = NSFetchRequest(entityName: Drama.entity())
+        fetchRequest.predicate = nil
+        fetchRequest.predicate = NSPredicate(format: "id = \(id)")
+        return fetchRequest
     }
 }
