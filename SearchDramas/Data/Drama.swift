@@ -9,7 +9,6 @@
 import CoreData
 
 public enum DramaDefine {
-    static let entityName = "Drama"
     static let id = "id"
     static let name = "name"
     static let rating = "rating"
@@ -18,7 +17,7 @@ public enum DramaDefine {
     static let thumbData = "thumbData"
 }
 
-struct Drama {
+struct DramaObject {
     let name: String
     let rating: String
         
@@ -27,4 +26,32 @@ struct Drama {
         self.rating = String(result.rating)
     }
 
+}
+
+class Drama: NSManagedObject {
+    @NSManaged var name: String
+    @NSManaged var rating: String
+       
+    class func entity() -> String {
+        return "Drama"
+    }
+    
+    func update(_ result: ResponseData) {
+        self.name = result.name
+        self.rating = String(result.rating)
+    }
+    
+ 
+    class func createFetchRequest() -> NSFetchRequest<Drama> {
+        let fetchRequest = NSFetchRequest<Drama>(entityName:Drama.entity())
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: DramaDefine.name, ascending:true)]
+        fetchRequest.propertiesToFetch = [DramaDefine.name, DramaDefine.rating]
+        return fetchRequest
+    }
+    
+    class func createbatchDeleteRequest() -> NSBatchDeleteRequest {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Drama.entity())
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        return deleteRequest
+    }
 }

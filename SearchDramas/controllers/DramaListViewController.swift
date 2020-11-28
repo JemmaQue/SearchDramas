@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 let DramaListCellID = "DramaListCell"
 let SegueID = "ShowDetail"
@@ -22,7 +23,11 @@ extension UITableViewController {
 }
 
 class DramaListViewController: UITableViewController {
-    private var dataProvider = DataProvider()
+    private lazy var dataProvider: DataProvider = {
+        let provider = DataProvider()
+        provider.fetchedResultsControllerDelegate = self
+        return provider
+    }()
     private var loadingView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
         view.color = UIColor.gray
@@ -36,23 +41,22 @@ class DramaListViewController: UITableViewController {
         tableView.backgroundView = loadingView
         loadingView.startAnimating()
         settingSearchController()
-        
         dataProvider.fetchDramas { (error) in
             DispatchQueue.main.async {
                 sleep(1)
                 self.loadingView.stopAnimating()
-                self.showAlert(message: error.errorMessage())
+                self.handleCompletion(error)
             }
         }
-        dataProvider.dramasChanged = { (results) in
-            DispatchQueue.main.async {
-                sleep(1)
-                self.loadingView.stopAnimating()
-                self.tableView.reloadData()
-            }
-        }
-
        
+    }
+    
+    private func handleCompletion(_ error: Error?) {
+        if let error = error {
+            showAlert(message: error.errorMessage())
+        } else {
+            tableView.reloadData()
+        }
     }
     
     func settingSearchController() {
@@ -60,8 +64,20 @@ class DramaListViewController: UITableViewController {
         searchController.searchBar.sizeToFit()
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.text = dataProvider.fetchSearchWord()
+    }
+    
+    @IBAction func refreshControlValueChanged(_ sender: UIRefreshControl) {
+        dataProvider.fetchDramas { (error) in
+            DispatchQueue.main.async {
+                sleep(1)
+                self.refreshControl?.endRefreshing()
+                self.loadingView.stopAnimating()
+                self.handleCompletion(error)
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -69,6 +85,12 @@ class DramaListViewController: UITableViewController {
         controller.drama = (sender as! Drama)
     }
 
+}
+
+extension DramaListViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        tableView.reloadData()
+    }
 }
 
 extension DramaListViewController: UISearchResultsUpdating {
@@ -82,14 +104,6 @@ extension DramaListViewController: UISearchResultsUpdating {
 }
 
 extension DramaListViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
-    }
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchController.searchBar.text else {
             return
@@ -102,19 +116,19 @@ extension DramaListViewController: UISearchBarDelegate {
 
 extension DramaListViewController {
     override  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let drama = dataProvider.dramas[indexPath.row]
+        let drama = (searchController.isActive) ? dataProvider.filteredDramas[indexPath.row]: dataProvider.fetchedResultsController.object(at: indexPath)
         self.performSegue(withIdentifier: SegueID, sender: drama)
     }
 }
 
 extension DramaListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (searchController.isActive) ? dataProvider.filteredDramas.count: dataProvider.dramas.count
+        return (searchController.isActive) ? dataProvider.filteredDramas.count :  dataProvider.fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DramaListCellID, for: indexPath)
-        let drama = (searchController.isActive) ? dataProvider.filteredDramas[indexPath.row]: dataProvider.dramas[indexPath.row]
+        let drama = (searchController.isActive) ? dataProvider.filteredDramas[indexPath.row]: dataProvider.fetchedResultsController.object(at: indexPath)
         cell.textLabel?.text = drama.name
         cell.detailTextLabel?.text = drama.rating
         return cell

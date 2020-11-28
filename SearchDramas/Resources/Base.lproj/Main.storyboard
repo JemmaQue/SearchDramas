@@ -46,6 +46,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="IPH-Rj-xmN"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Ugd-Qz-Gep">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <attributedString key="attributedTitle"/>
+                        <connections>
+                            <action selector="refreshControlValueChanged:" destination="WB8-WD-yVF" eventType="valueChanged" id="4oV-M7-P2L"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <segue destination="66V-xy-zDk" kind="show" identifier="ShowDetail" id="Zyk-2X-pJB"/>
                     </connections>

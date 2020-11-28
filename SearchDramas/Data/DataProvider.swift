@@ -9,13 +9,14 @@
 import UIKit
 import CoreData
 
-let dataErrorDomain = "dataErrorDomain"
+
 let searchWord = "SearchWord"
 
-enum DataErrorCode: NSInteger {
-    case missingData = 100
-    case networkUnavailable = 101
-    case wrongDataFormat = 102
+enum DramaError: Error {
+    case missingData
+    case networkUnavailable
+    case wrongDataFormat
+    case insertError
 }
 
 struct Response: Codable {
@@ -32,16 +33,26 @@ struct ResponseData: Codable {
 }
 
 class DataProvider: NSObject {
-    var dramas: [Drama] = []
-    var dramasChanged: ([Drama]) -> Void = {_ in }
     var filteredDramas: [Drama] = []
     private let repository = ApiRepository.shared
-    private let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-    var viewContext: NSManagedObjectContext {
-        return persistentContainer.viewContext
-    }
+    let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    weak var fetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate?
+    lazy var fetchedResultsController: NSFetchedResultsController<Drama> = {
+        let controller = NSFetchedResultsController(fetchRequest: Drama.createFetchRequest(),
+                                                    managedObjectContext: persistentContainer.viewContext,
+                                                    sectionNameKeyPath: nil, cacheName: nil)
+        controller.delegate = fetchedResultsControllerDelegate
         
-    func fetchDramas(completion: @escaping(Error) -> Void) {
+        do {
+            try controller.performFetch()
+        } catch {
+            fatalError("Unresolved error \(error)")
+        }
+        
+        return controller
+    }()
+    
+    func fetchDramas(completion: @escaping(Error?) -> Void) {
         repository.requestDramas() { results, error in
             if let error = error {
                 completion(error)
@@ -49,19 +60,52 @@ class DataProvider: NSObject {
             }
             
             guard let results = results else {
-                let error = NSError(domain: dataErrorDomain, code: DataErrorCode.wrongDataFormat.rawValue, userInfo: nil)
-                completion(error)
+                completion(DramaError.wrongDataFormat)
                 return
             }
-            
-            self.dramas = results.map { Drama($0) }
-            self.dramasChanged(self.dramas)
+              
+            self.syncDramas(results)
+            completion(nil)
         }
     }
-    
+           
+    private func syncDramas(_ results: [ResponseData]) {
+        let taskContext = self.persistentContainer.newBackgroundContext()
+        taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        taskContext.undoManager = nil
+        taskContext.performAndWait {
+            do {
+                let batchDeleteResult = try taskContext.execute(Drama.createbatchDeleteRequest()) as? NSBatchDeleteResult
+                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
+                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
+                                                        into: [self.persistentContainer.viewContext])
+                }
+            } catch let error as NSError {
+                print("Dramas: Could not reset. \(error), \(error.userInfo)")
+            }
+            
+            for data in results {
+                guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: taskContext) as? Drama else {
+                    print("Error: Failed to create a new Film object!")
+                    return
+                }
+                drama.update(data)
+            }
+            
+            guard taskContext.hasChanges else { return }
+            do {
+                try taskContext.save()
+            } catch {
+                print("Error: \(error)\nCould not save Core Data context.")
+            }
+            taskContext.reset()
+        }
+        
+    }
+            
     func updatefilteredDramas(_ searchText: String) {
-        filteredDramas = dramas.filter {
-        ($0.name).localizedCaseInsensitiveContains(searchText) }
+        filteredDramas = fetchedResultsController.fetchedObjects?.filter {
+        ($0.name).localizedCaseInsensitiveContains(searchText) } ?? []
     }
     
     func fetchSearchWord() -> String {

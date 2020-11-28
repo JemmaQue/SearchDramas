@@ -11,7 +11,7 @@ import Foundation
 extension Error {
     func errorMessage() -> String {
         let error = self as NSError
-        return "errorMessage \(error), \(error.userInfo)"
+        return error.localizedDescription
     }
 }
 
@@ -29,8 +29,7 @@ class ApiRepository {
             }
             
             guard let data = data else {
-                let error = NSError(domain: dataErrorDomain, code: DataErrorCode.networkUnavailable.rawValue, userInfo: nil)
-                completion(nil, error)
+                completion(nil, DramaError.networkUnavailable)
                 return
             }
                         
