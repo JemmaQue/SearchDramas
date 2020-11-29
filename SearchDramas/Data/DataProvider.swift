@@ -93,7 +93,7 @@ class DataProvider: NSObject {
             
             for data in results {
                 guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: taskContext) as? Drama else {
-                    print("Error: Failed to create a new Film object!")
+                    print("Error: Failed to create a new object!")
                     return
                 }
                 drama.update(data)

@@ -19,10 +19,11 @@ class ApiRepository {
     private init() {}
     static let shared = ApiRepository()
     private let urlSession = URLSession.shared
-    private let requestURL = URL(string: "https://static.linetv.tw/interview/dramas-sample.json")!
-
+    
     func requestDramas(completion: @escaping(_ results: [ResponseData]?, _ error: Error?) -> ()) {
-        urlSession.dataTask(with: requestURL) { (data, response, error) in
+        let url = URL(string: "https://static.linetv.tw/interview/dramas-sample.json")!
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 15)
+        urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(nil, error)
                 return

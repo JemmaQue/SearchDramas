@@ -43,7 +43,6 @@ class DramaListViewController: UITableViewController {
         settingSearchController()
         dataProvider.fetchDramas { (error) in
             DispatchQueue.main.async {
-                sleep(1)
                 self.loadingView.stopAnimating()
                 self.handleCompletion(error)
             }
@@ -72,12 +71,20 @@ class DramaListViewController: UITableViewController {
     @IBAction func refreshControlValueChanged(_ sender: UIRefreshControl) {
         dataProvider.fetchDramas { (error) in
             DispatchQueue.main.async {
-                sleep(1)
-                self.refreshControl?.endRefreshing()
                 self.loadingView.stopAnimating()
+                self.endRefreshing()
                 self.handleCompletion(error)
             }
         }
+    }
+    
+    func endRefreshing() {
+        guard self.refreshControl!.isRefreshing else {
+            return
+        }
+        self.refreshControl!.endRefreshing()
+        sleep(1)
+        self.tableView.setContentOffset(CGPoint(x: 0, y: -(self.refreshControl!.bounds.size.height)), animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
