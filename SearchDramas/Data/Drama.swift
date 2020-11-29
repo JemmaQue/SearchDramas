@@ -34,6 +34,7 @@ class Drama: NSManagedObject {
     @NSManaged var rating: String
     @NSManaged var thumbData: Data
     @NSManaged var createdDate: Date
+    @NSManaged var totalViews: String
     
     static func entity() -> String {
         return "Drama"
@@ -49,6 +50,7 @@ class Drama: NSManagedObject {
         self.id = String(result.drama_id)
         self.name = result.name
         self.rating = String(result.rating)
+        self.totalViews = String(result.total_views)
         self.createdDate = ResponseData.dateFormatter().date(from: result.created_at)!
         do {
             self.thumbData = try Data(contentsOf: URL(string: result.thumb)!)

@@ -8,30 +8,23 @@
 
 import UIKit
 
-let DramaDetailCellID = "DramaDetailCell"
-
 class DramaDetailViewController: UITableViewController {
     var drama: Drama!
     
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var ratingLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var totalViewsLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-       
+        imageView.image = UIImage(data: drama!.thumbData)
+        nameLabel.text = drama!.name
+        ratingLabel.text = drama!.rating
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        dateLabel.text = dateFormatter.string(from: drama.createdDate)
+        totalViewsLabel.text = drama.totalViews
     }
 
 }
-
-extension DramaDetailViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (drama == nil) ? 0: 1
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DramaDetailCellID, for: indexPath)
-        
-        cell.textLabel?.text = drama!.name
-        cell.detailTextLabel?.text = drama!.rating
-        return cell
-    }
-}
-

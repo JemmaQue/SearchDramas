@@ -6,8 +6,9 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="rating" optional="YES" attributeType="String"/>
         <attribute name="thumbData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="totalViews" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Drama" positionX="-36" positionY="9" width="128" height="118"/>
+        <element name="Drama" positionX="-36" positionY="9" width="128" height="133"/>
     </elements>
 </model>
