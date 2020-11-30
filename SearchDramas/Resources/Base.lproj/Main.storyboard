@@ -216,6 +216,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="1eE-tJ-Mdc"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="Tjb-vc-Uxp">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refreshControlValueChanged:" destination="66V-xy-zDk" eventType="valueChanged" id="2oy-mP-CKA"/>
+                        </connections>
+                    </refreshControl>
                     <connections>
                         <outlet property="dateLabel" destination="qtD-qA-Qu1" id="bUn-2r-JLx"/>
                         <outlet property="imageView" destination="8v2-P7-x6x" id="iB0-Cv-tuG"/>

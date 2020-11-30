@@ -22,7 +22,8 @@ class ApiRepository {
     
     func requestDramas(completion: @escaping(_ results: [ResponseData]?, _ error: Error?) -> ()) {
         let url = URL(string: "https://static.linetv.tw/interview/dramas-sample.json")!
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 15)
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData
+, timeoutInterval: 10)
         urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(nil, error)

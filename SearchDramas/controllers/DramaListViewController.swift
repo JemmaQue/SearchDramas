@@ -14,17 +14,26 @@ let SegueID = "ShowDetail"
 
 extension UITableViewController {
     func showAlert(message: String) {
-        let alertController = UIAlertController(title: "error", message: message, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "ok", style: .default, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
+    }
+    
+    func endRefreshing() {
+        guard self.refreshControl!.isRefreshing else {
+            return
+        }
+        self.refreshControl!.endRefreshing()
+        sleep(1)
+        self.tableView.setContentOffset(CGPoint(x: 0, y: -(self.refreshControl!.bounds.size.height)), animated: true)
     }
     
 }
 
 class DramaListViewController: UITableViewController {
     private lazy var dataProvider: DataProvider = {
-        let provider = DataProvider()
+        let provider = DataProvider.shared
         provider.fetchedResultsControllerDelegate = self
         return provider
     }()
@@ -44,17 +53,15 @@ class DramaListViewController: UITableViewController {
         dataProvider.fetchDramas { (error) in
             DispatchQueue.main.async {
                 self.loadingView.stopAnimating()
-                self.handleCompletion(error)
+                self.handleFailure(error)
             }
         }
        
     }
-    
-    private func handleCompletion(_ error: Error?) {
+        
+    private func handleFailure(_ error: Error?) {
         if let error = error {
             showAlert(message: error.errorMessage())
-        } else {
-            tableView.reloadData()
         }
     }
     
@@ -63,7 +70,7 @@ class DramaListViewController: UITableViewController {
         searchController.searchBar.sizeToFit()
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self
-        searchController.dimsBackgroundDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.text = dataProvider.fetchSearchWord()
     }
@@ -73,18 +80,9 @@ class DramaListViewController: UITableViewController {
             DispatchQueue.main.async {
                 self.loadingView.stopAnimating()
                 self.endRefreshing()
-                self.handleCompletion(error)
+                self.handleFailure(error)
             }
         }
-    }
-    
-    func endRefreshing() {
-        guard self.refreshControl!.isRefreshing else {
-            return
-        }
-        self.refreshControl!.endRefreshing()
-        sleep(1)
-        self.tableView.setContentOffset(CGPoint(x: 0, y: -(self.refreshControl!.bounds.size.height)), animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -13,10 +13,11 @@ import CoreData
 let searchWord = "SearchWord"
 
 enum DramaError: Error {
-    case missingData
     case networkUnavailable
     case wrongDataFormat
-    case insertError
+    case insertFailure
+    case deleteFailure
+    case saveFailure
 }
 
 struct Response: Codable {
@@ -39,7 +40,9 @@ struct ResponseData: Codable {
     }
 }
 
-class DataProvider: NSObject {
+class DataProvider {
+    private init() {}
+    static let shared = DataProvider()
     var filteredDramas: [Drama] = []
     private let repository = ApiRepository.shared
     let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
@@ -70,13 +73,20 @@ class DataProvider: NSObject {
                 completion(DramaError.wrongDataFormat)
                 return
             }
-              
-            self.syncDramas(results)
+            
+            do {
+                try self.syncDramas(results)
+            } catch let error as NSError {
+                completion(error)
+                return
+            }
+            
             completion(nil)
         }
     }
            
-    private func syncDramas(_ results: [ResponseData]) {
+    private func syncDramas(_ results: [ResponseData]) throws {
+        var performError: Error?
         let taskContext = self.persistentContainer.newBackgroundContext()
         taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         taskContext.undoManager = nil
@@ -87,13 +97,13 @@ class DataProvider: NSObject {
                     NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
                                                         into: [self.persistentContainer.viewContext])
                 }
-            } catch let error as NSError {
-                print("Dramas: Could not reset. \(error), \(error.userInfo)")
+            } catch {
+                performError = DramaError.deleteFailure
             }
             
             for data in results {
                 guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: taskContext) as? Drama else {
-                    print("Error: Failed to create a new object!")
+                    performError = DramaError.insertFailure
                     return
                 }
                 drama.update(data)
@@ -103,13 +113,22 @@ class DataProvider: NSObject {
             do {
                 try taskContext.save()
             } catch {
-                print("Error: \(error)\nCould not save Core Data context.")
+                performError = DramaError.saveFailure
             }
             taskContext.reset()
         }
         
+        if let error = performError {
+            throw error
+        }
     }
-            
+    
+    func updateSelectedDrama(id: String) -> Drama? {
+        return fetchedResultsController.fetchedObjects?.filter {
+            $0.id == id
+        }.first
+    }
+    
     func updatefilteredDramas(_ searchText: String) {
         filteredDramas = fetchedResultsController.fetchedObjects?.filter {
         ($0.name).localizedCaseInsensitiveContains(searchText) } ?? []
