@@ -46,15 +46,19 @@ class DataProvider {
     var filteredDramas: [Drama] = []
     private let repository = ApiRepository.shared
     let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    lazy var backgroundContext: NSManagedObjectContext = {
+        return self.persistentContainer.newBackgroundContext()
+    }()
     weak var fetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate?
     lazy var fetchedResultsController: NSFetchedResultsController<Drama> = {
         let controller = NSFetchedResultsController(fetchRequest: Drama.createFetchRequest(),
                                                     managedObjectContext: persistentContainer.viewContext,
                                                     sectionNameKeyPath: nil, cacheName: nil)
         controller.delegate = fetchedResultsControllerDelegate
-        
+        persistentContainer.viewContext.reset()
         do {
             try controller.performFetch()
+            
         } catch {
             fatalError("Unresolved error \(error)")
         }
@@ -74,52 +78,52 @@ class DataProvider {
                 return
             }
             
-            do {
-                try self.syncDramas(results)
-            } catch let error as NSError {
-                completion(error)
-                return
-            }
-            
+            self.syncDramas(results)
             completion(nil)
         }
     }
-           
-    private func syncDramas(_ results: [ResponseData]) throws {
-        var performError: Error?
-        let taskContext = self.persistentContainer.newBackgroundContext()
-        taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        taskContext.undoManager = nil
-        taskContext.performAndWait {
-            do {
-                let batchDeleteResult = try taskContext.execute(Drama.createbatchDeleteRequest()) as? NSBatchDeleteResult
-                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
-                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
-                                                        into: [self.persistentContainer.viewContext])
-                }
-            } catch {
-                performError = DramaError.deleteFailure
+      
+    func syncDramas(_ results: [ResponseData]) {
+        backgroundContext.performAndWait {
+            self.removeALL()
+            for result in results {
+                self.insertDrama(result: result)
             }
-            
-            for data in results {
-                guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: taskContext) as? Drama else {
-                    performError = DramaError.insertFailure
-                    return
-                }
-                drama.update(data)
-            }
-            
-            guard taskContext.hasChanges else { return }
-            do {
-                try taskContext.save()
-            } catch {
-                performError = DramaError.saveFailure
-            }
-            taskContext.reset()
+            self.save()
         }
-        
-        if let error = performError {
-            throw error
+    }
+    
+    func removeALL() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Drama.entity())
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        _ = try? backgroundContext.execute(deleteRequest)
+    }
+    
+    func insertDrama(result: ResponseData) {
+        guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: backgroundContext) as? Drama else {
+            return
+        }
+        drama.update(result)
+    }
+    
+    func save() {
+        if backgroundContext.hasChanges {
+            do {
+                try backgroundContext.save()
+            } catch {
+                print("Save error \(error)")
+            }
+        }
+        backgroundContext.reset()
+
+    }
+    
+    func resetAndRefetch() {
+        persistentContainer.viewContext.reset()
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("Unresolved error \(error)")
         }
     }
     

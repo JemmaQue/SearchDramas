@@ -53,15 +53,18 @@ class DramaListViewController: UITableViewController {
         dataProvider.fetchDramas { (error) in
             DispatchQueue.main.async {
                 self.loadingView.stopAnimating()
-                self.handleFailure(error)
+                self.handleCompletion(error)
             }
         }
        
     }
-        
-    private func handleFailure(_ error: Error?) {
+
+    private func handleCompletion(_ error: Error?) {
         if let error = error {
             showAlert(message: error.errorMessage())
+        } else {
+            dataProvider.resetAndRefetch()
+            tableView.reloadData()
         }
     }
     
@@ -80,7 +83,7 @@ class DramaListViewController: UITableViewController {
             DispatchQueue.main.async {
                 self.loadingView.stopAnimating()
                 self.endRefreshing()
-                self.handleFailure(error)
+                self.handleCompletion(error)
             }
         }
     }
@@ -92,8 +95,8 @@ class DramaListViewController: UITableViewController {
 
 }
 
-extension DramaListViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+extension DramaListViewController: NSFetchedResultsControllerDelegate {    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.reloadData()
     }
 }

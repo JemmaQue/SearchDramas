@@ -11,11 +11,7 @@ import CoreData
 
 class DramaDetailViewController: UITableViewController {
     var drama: Drama!
-    private lazy var dataProvider: DataProvider = {
-        let provider = DataProvider.shared
-        provider.fetchedResultsControllerDelegate = self
-        return provider
-    }()
+    private lazy var dataProvider = DataProvider.shared
     private var loadingView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
         view.color = UIColor.gray
@@ -47,25 +43,22 @@ class DramaDetailViewController: UITableViewController {
             DispatchQueue.main.async {
                 self.loadingView.stopAnimating()
                 self.endRefreshing()
-                self.handleFailure(error)
+                self.handleCompletion(error)
             }
         }
     }
     
-    private func handleFailure(_ error: Error?) {
+    private func handleCompletion(_ error: Error?) {
         if let error = error {
             showAlert(message: error.errorMessage())
+        } else {
+            dataProvider.resetAndRefetch()
+            if let updateDrama = dataProvider.updateSelectedDrama(id: drama.id) {
+                drama = updateDrama
+                reloadData()
+            }
         }
     }
       
 }
 
-
-extension DramaDetailViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        if let updateDrama = dataProvider.updateSelectedDrama(id: drama.id) {
-            drama = updateDrama
-            reloadData()
-        }
-    }
-}

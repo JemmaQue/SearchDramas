@@ -55,6 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
+                
+                container.viewContext.automaticallyMergesChangesFromParent = false
+                container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+                container.viewContext.undoManager = nil
+                container.viewContext.shouldDeleteInaccessibleFaults = true
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
