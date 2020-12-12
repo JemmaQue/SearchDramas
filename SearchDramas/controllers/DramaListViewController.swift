@@ -27,27 +27,6 @@ extension UITableViewController {
         self.refreshControl!.endRefreshing()
     }
     
-    func loadIndicator() -> UIActivityIndicatorView {
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.style = UIActivityIndicatorView.Style.large
-        loadingIndicator.startAnimating()
-        return loadingIndicator
-    }
-    
-    func startLoading(_ loadIndicator : UIActivityIndicatorView) -> UIAlertController {
-        let alertController = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        alertController.view.addSubview(loadIndicator)
-        present(alertController, animated: true, completion: nil)
-        return alertController
-    }
-    
-    func stopLoading(_ loader : UIAlertController) {
-        DispatchQueue.main.async {
-            loader.dismiss(animated: true, completion: nil)
-        }
-    }
-
 }
 
 class DramaListViewController: UITableViewController {
@@ -57,15 +36,18 @@ class DramaListViewController: UITableViewController {
         return provider
     }()
     var searchController = UISearchController(searchResultsController: nil)
-    var loader: UIAlertController!
+    var loadingAlert :UIAlertController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "The Drama List"
         settingSearchController()
+        loadingAlert = startLoading()
         dataProvider.fetchDramas { (error) in
+            print("list loaded.")
             DispatchQueue.main.async {
-                self.stopLoading(self.loader)
+                self.loadingAlert?.dismiss(animated: true, completion: nil)
+                self.loadingAlert = nil
                 self.handleCompletion(error)
             }
         }
@@ -74,7 +56,19 @@ class DramaListViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        loader = startLoading(loadIndicator())
+        if let alertController = loadingAlert {
+            present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    func startLoading() -> UIAlertController {
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.large
+        loadingIndicator.startAnimating()
+        let alertController = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+        alertController.view.addSubview(loadingIndicator)
+        return alertController
     }
     
     private func handleCompletion(_ error: Error?) {

@@ -34,8 +34,8 @@ class DramaDetailViewController: UITableViewController {
     }
     
     @IBAction func refreshControlValueChanged(_ sender: Any) {
-        dataProvider.fetchDramas { (error) in
-            self.refresh(error)
+        dataProvider.fetchDramas { [weak self] (error) in
+            self?.refresh(error)
         }
     }
     
