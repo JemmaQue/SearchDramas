@@ -25,10 +25,29 @@ extension UITableViewController {
             return
         }
         self.refreshControl!.endRefreshing()
-        sleep(1)
-        self.tableView.setContentOffset(CGPoint(x: 0, y: -(self.refreshControl!.bounds.size.height)), animated: true)
     }
     
+    func loadIndicator() -> UIActivityIndicatorView {
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.style = UIActivityIndicatorView.Style.large
+        loadingIndicator.startAnimating()
+        return loadingIndicator
+    }
+    
+    func startLoading(_ loadIndicator : UIActivityIndicatorView) -> UIAlertController {
+        let alertController = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
+        alertController.view.addSubview(loadIndicator)
+        present(alertController, animated: true, completion: nil)
+        return alertController
+    }
+    
+    func stopLoading(_ loader : UIAlertController) {
+        DispatchQueue.main.async {
+            loader.dismiss(animated: true, completion: nil)
+        }
+    }
+
 }
 
 class DramaListViewController: UITableViewController {
@@ -37,28 +56,27 @@ class DramaListViewController: UITableViewController {
         provider.fetchedResultsControllerDelegate = self
         return provider
     }()
-    private var loadingView: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
-        view.color = UIColor.gray
-        return view
-    }()
     var searchController = UISearchController(searchResultsController: nil)
+    var loader: UIAlertController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "The Drama List"
-        tableView.backgroundView = loadingView
-        loadingView.startAnimating()
         settingSearchController()
         dataProvider.fetchDramas { (error) in
             DispatchQueue.main.async {
-                self.loadingView.stopAnimating()
+                self.stopLoading(self.loader)
                 self.handleCompletion(error)
             }
         }
        
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loader = startLoading(loadIndicator())
+    }
+    
     private func handleCompletion(_ error: Error?) {
         if let error = error {
             showAlert(message: error.errorMessage())
@@ -80,11 +98,14 @@ class DramaListViewController: UITableViewController {
     
     @IBAction func refreshControlValueChanged(_ sender: UIRefreshControl) {
         dataProvider.fetchDramas { (error) in
-            DispatchQueue.main.async {
-                self.loadingView.stopAnimating()
-                self.endRefreshing()
-                self.handleCompletion(error)
-            }
+            self.refresh(error)
+        }
+    }
+    
+    private func refresh(_ error: Error?) {
+        DispatchQueue.main.async {
+            self.endRefreshing()
+            self.handleCompletion(error)
         }
     }
     
@@ -126,6 +147,7 @@ extension DramaListViewController {
     override  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let drama = (searchController.isActive) ? dataProvider.filteredDramas[indexPath.row]: dataProvider.fetchedResultsController.object(at: indexPath)
         self.performSegue(withIdentifier: SegueID, sender: drama)
+        self.endRefreshing()
     }
 }
 

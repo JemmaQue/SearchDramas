@@ -11,12 +11,7 @@ import CoreData
 
 class DramaDetailViewController: UITableViewController {
     var drama: Drama!
-    private lazy var dataProvider = DataProvider.shared
-    private var loadingView: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
-        view.color = UIColor.gray
-        return view
-    }()
+    private var dataProvider = DataProvider.shared
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
@@ -40,11 +35,14 @@ class DramaDetailViewController: UITableViewController {
     
     @IBAction func refreshControlValueChanged(_ sender: Any) {
         dataProvider.fetchDramas { (error) in
-            DispatchQueue.main.async {
-                self.loadingView.stopAnimating()
-                self.endRefreshing()
-                self.handleCompletion(error)
-            }
+            self.refresh(error)
+        }
+    }
+    
+    private func refresh(_ error: Error?) {
+        DispatchQueue.main.async {
+            self.endRefreshing()
+            self.handleCompletion(error)
         }
     }
     
