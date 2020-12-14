@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		BF451DE025728F07004001BC /* DramaListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF451DDF25728F07004001BC /* DramaListCell.swift */; };
+		BFD5EB5C25875D9D00D4271B /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB5B25875D9D00D4271B /* AccessToken.swift */; };
+		BFD5EB5F25876AED00D4271B /* ApiResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB5E25876AED00D4271B /* ApiResult.swift */; };
+		BFD5EB6125876BC500D4271B /* AuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB6025876BC500D4271B /* AuthHelper.swift */; };
+		BFD5EB6425876C5300D4271B /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB6325876C5300D4271B /* Error.swift */; };
+		BFD5EB6625877D3000D4271B /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB6525877D3000D4271B /* AuthAPI.swift */; };
+		BFD5EB682587807700D4271B /* AccessTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB672587807600D4271B /* AccessTokenStore.swift */; };
 		BFFDE3EE2570D14300F70E80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */; };
 		BFFDE3F02570D14300F70E80 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */; };
 		BFFDE3F52570D14300F70E80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFFDE3F32570D14300F70E80 /* Main.storyboard */; };
@@ -23,6 +29,12 @@
 
 /* Begin PBXFileReference section */
 		BF451DDF25728F07004001BC /* DramaListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaListCell.swift; sourceTree = "<group>"; };
+		BFD5EB5B25875D9D00D4271B /* AccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
+		BFD5EB5E25876AED00D4271B /* ApiResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResult.swift; sourceTree = "<group>"; };
+		BFD5EB6025876BC500D4271B /* AuthHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHelper.swift; sourceTree = "<group>"; };
+		BFD5EB6325876C5300D4271B /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		BFD5EB6525877D3000D4271B /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
+		BFD5EB672587807600D4271B /* AccessTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenStore.swift; sourceTree = "<group>"; };
 		BFFDE3EA2570D14300F70E80 /* SearchDramas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchDramas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -57,6 +69,23 @@
 			path = views;
 			sourceTree = "<group>";
 		};
+		BFD5EB5D2587696B00D4271B /* DramaList */ = {
+			isa = PBXGroup;
+			children = (
+				BFFDE4052570D2BD00F70E80 /* controllers */,
+				BF451DDA25728EA6004001BC /* views */,
+			);
+			path = DramaList;
+			sourceTree = "<group>";
+		};
+		BFD5EB6225876C3E00D4271B /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BFD5EB6325876C5300D4271B /* Error.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		BFFDE3E12570D14300F70E80 = {
 			isa = PBXGroup;
 			children = (
@@ -77,10 +106,10 @@
 			isa = PBXGroup;
 			children = (
 				BFFDE3FE2570D14500F70E80 /* Info.plist */,
-				BF451DDA25728EA6004001BC /* views */,
-				BFFDE4092570D3C500F70E80 /* Data */,
+				BFFDE4092570D3C500F70E80 /* Model */,
 				BFFDE40A2570D3E000F70E80 /* Repository */,
-				BFFDE4052570D2BD00F70E80 /* controllers */,
+				BFD5EB5D2587696B00D4271B /* DramaList */,
+				BFD5EB6225876C3E00D4271B /* Utils */,
 				BFFDE4082570D3A100F70E80 /* Resources */,
 			);
 			path = SearchDramas;
@@ -107,20 +136,25 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		BFFDE4092570D3C500F70E80 /* Data */ = {
+		BFFDE4092570D3C500F70E80 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				BFFDE40F2570DE8300F70E80 /* DataProvider.swift */,
 				BFFDE3F62570D14300F70E80 /* SearchDramas.xcdatamodeld */,
 				BFFDE4112570DF7700F70E80 /* Drama.swift */,
+				BFD5EB5B25875D9D00D4271B /* AccessToken.swift */,
+				BFD5EB5E25876AED00D4271B /* ApiResult.swift */,
+				BFD5EB6025876BC500D4271B /* AuthHelper.swift */,
+				BFD5EB672587807600D4271B /* AccessTokenStore.swift */,
 			);
-			path = Data;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		BFFDE40A2570D3E000F70E80 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
 				BFFDE40B2570D40800F70E80 /* ApiRepository.swift */,
+				BFD5EB6525877D3000D4271B /* AuthAPI.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -196,15 +230,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD5EB682587807700D4271B /* AccessTokenStore.swift in Sources */,
 				BFFDE41C2570E50500F70E80 /* DramaListViewController.swift in Sources */,
 				BFFDE41A2570E4D400F70E80 /* DramaDetailViewController.swift in Sources */,
 				BFFDE4102570DE8300F70E80 /* DataProvider.swift in Sources */,
+				BFD5EB6425876C5300D4271B /* Error.swift in Sources */,
 				BFFDE40C2570D40800F70E80 /* ApiRepository.swift in Sources */,
 				BF451DE025728F07004001BC /* DramaListCell.swift in Sources */,
+				BFD5EB6625877D3000D4271B /* AuthAPI.swift in Sources */,
+				BFD5EB6125876BC500D4271B /* AuthHelper.swift in Sources */,
 				BFFDE3EE2570D14300F70E80 /* AppDelegate.swift in Sources */,
 				BFFDE3F02570D14300F70E80 /* SceneDelegate.swift in Sources */,
 				BFFDE3F82570D14300F70E80 /* SearchDramas.xcdatamodeld in Sources */,
 				BFFDE4122570DF7700F70E80 /* Drama.swift in Sources */,
+				BFD5EB5F25876AED00D4271B /* ApiResult.swift in Sources */,
+				BFD5EB5C25875D9D00D4271B /* AccessToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

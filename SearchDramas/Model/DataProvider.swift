@@ -9,36 +9,7 @@
 import UIKit
 import CoreData
 
-
 let searchWord = "SearchWord"
-
-enum DramaError: Error {
-    case networkUnavailable
-    case wrongDataFormat
-    case insertFailure
-    case deleteFailure
-    case saveFailure
-}
-
-struct Response: Codable {
-    let data: [ResponseData]
-}
-
-struct ResponseData: Codable {
-    let drama_id: Int
-    let name: String
-    let total_views: Int
-    let created_at: String
-    let thumb: String
-    let rating: Float
-    
-    static func dateFormatter() -> DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        return dateFormatter
-    }
-}
 
 class DataProvider {
     private init() {}
@@ -66,6 +37,10 @@ class DataProvider {
         return controller
     }()
     
+    deinit {
+        print("DataProvider deinit")
+    }
+    
     func fetchDramas(completion: @escaping(Error?) -> Void) {
         repository.requestDramas() { results, error in
             if let error = error {
@@ -78,6 +53,7 @@ class DataProvider {
                 return
             }
             
+            print("sync...")
             self.syncDramas(results)
             completion(nil)
         }
