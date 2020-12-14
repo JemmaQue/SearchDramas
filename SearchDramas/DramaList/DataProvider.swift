@@ -9,24 +9,19 @@
 import UIKit
 import CoreData
 
-let searchWord = "SearchWord"
-
 class DataProvider {
     private init() {}
     static let shared = DataProvider()
     var filteredDramas: [Drama] = []
     private let repository = ApiRepository.shared
-    let persistentContainer = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-    lazy var backgroundContext: NSManagedObjectContext = {
-        return self.persistentContainer.newBackgroundContext()
-    }()
+    private let dramaStore = DramaStore.shared
     weak var fetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate?
     lazy var fetchedResultsController: NSFetchedResultsController<Drama> = {
         let controller = NSFetchedResultsController(fetchRequest: Drama.createFetchRequest(),
-                                                    managedObjectContext: persistentContainer.viewContext,
+                                                    managedObjectContext: dramaStore.viewContext(),
                                                     sectionNameKeyPath: nil, cacheName: nil)
         controller.delegate = fetchedResultsControllerDelegate
-        persistentContainer.viewContext.reset()
+        dramaStore.viewContext().reset()
         do {
             try controller.performFetch()
             
@@ -54,48 +49,13 @@ class DataProvider {
             }
             
             print("sync...")
-            self.syncDramas(results)
+            self.dramaStore.syncDramas(results)
             completion(nil)
         }
     }
       
-    func syncDramas(_ results: [ResponseData]) {
-        backgroundContext.performAndWait {
-            self.removeALL()
-            for result in results {
-                self.insertDrama(result: result)
-            }
-            self.save()
-        }
-    }
-    
-    func removeALL() {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: Drama.entity())
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        _ = try? backgroundContext.execute(deleteRequest)
-    }
-    
-    func insertDrama(result: ResponseData) {
-        guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: backgroundContext) as? Drama else {
-            return
-        }
-        drama.update(result)
-    }
-    
-    func save() {
-        if backgroundContext.hasChanges {
-            do {
-                try backgroundContext.save()
-            } catch {
-                print("Save error \(error)")
-            }
-        }
-        backgroundContext.reset()
-
-    }
-    
     func resetAndRefetch() {
-        persistentContainer.viewContext.reset()
+        dramaStore.viewContext().reset()
         do {
             try fetchedResultsController.performFetch()
         } catch {
@@ -114,12 +74,4 @@ class DataProvider {
         ($0.name).localizedCaseInsensitiveContains(searchText) } ?? []
     }
     
-    func fetchSearchWord() -> String {
-        return UserDefaults.standard.object(forKey: searchWord) as? String ?? String()
-    }
-    
-    func saveSearchWord(_ searchText: String) {
-        UserDefaults().setValue(searchText, forKey: searchWord)
-    }
-
 }

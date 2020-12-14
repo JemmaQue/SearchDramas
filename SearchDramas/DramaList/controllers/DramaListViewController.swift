@@ -87,7 +87,7 @@ class DramaListViewController: UITableViewController {
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         tableView.tableHeaderView = searchController.searchBar
-        searchController.searchBar.text = dataProvider.fetchSearchWord()
+        searchController.searchBar.text = DramaStore.shared.fetchSearchWord()
     }
     
     @IBAction func refreshControlValueChanged(_ sender: UIRefreshControl) {
@@ -131,7 +131,7 @@ extension DramaListViewController: UISearchBarDelegate {
         guard let searchText = searchController.searchBar.text else {
             return
         }
-        self.dataProvider.saveSearchWord(searchText)
+        DramaStore.shared.saveSearchWord(searchText)
         self.searchController.searchBar.resignFirstResponder()
         
     }

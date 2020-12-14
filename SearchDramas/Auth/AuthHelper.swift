@@ -11,8 +11,8 @@ import UIKit
 class AuthHelper {
         
     func fetchAccessToken() {
-        if AccessTokenStore.shared.accessToken == nil {
-            if AuthAPI.shared.requestAccessToken() == AccessTokenInValid {
+        if AccessTokenStore.shared.current == nil {
+            if AuthAPI.shared.requestAccessToken() == .AccessTokenInValid {
                 print("request access token fail")
             }
             return

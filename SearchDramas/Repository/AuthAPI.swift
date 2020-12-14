@@ -17,7 +17,7 @@ class AuthAPI {
     }
     
     func refreshAccessToken() -> AuthStatus {
-        return .AccessTokenExpired
+        return .AccessTokenInValid
     }
     
     func verifyAccessToken() -> AuthStatus {
