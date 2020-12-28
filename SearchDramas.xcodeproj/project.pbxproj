@@ -15,6 +15,7 @@
 		BFD5EB6625877D3000D4271B /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB6525877D3000D4271B /* AuthAPI.swift */; };
 		BFD5EB682587807700D4271B /* AccessTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB672587807600D4271B /* AccessTokenStore.swift */; };
 		BFD5EB6D258793E800D4271B /* DramaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB6C258793E800D4271B /* DramaStore.swift */; };
+		BFD5EB722587A25900D4271B /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB712587A25900D4271B /* ImageStore.swift */; };
 		BFFDE3EE2570D14300F70E80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */; };
 		BFFDE3F02570D14300F70E80 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */; };
 		BFFDE3F52570D14300F70E80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFFDE3F32570D14300F70E80 /* Main.storyboard */; };
@@ -37,6 +38,7 @@
 		BFD5EB6525877D3000D4271B /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
 		BFD5EB672587807600D4271B /* AccessTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTokenStore.swift; sourceTree = "<group>"; };
 		BFD5EB6C258793E800D4271B /* DramaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaStore.swift; sourceTree = "<group>"; };
+		BFD5EB712587A25900D4271B /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		BFFDE3EA2570D14300F70E80 /* SearchDramas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchDramas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFDE3ED2570D14300F70E80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFDE3EF2570D14300F70E80 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 		BFD5EB6A2587938000D4271B /* API */ = {
 			isa = PBXGroup;
 			children = (
+				BFD5EB6525877D3000D4271B /* AuthAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -113,6 +116,14 @@
 				BFD5EB672587807600D4271B /* AccessTokenStore.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		BFD5EB6E25879D3000D4271B /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				BFD5EB712587A25900D4271B /* ImageStore.swift */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 		BFFDE3E12570D14300F70E80 = {
@@ -134,10 +145,11 @@
 		BFFDE3EC2570D14300F70E80 /* SearchDramas */ = {
 			isa = PBXGroup;
 			children = (
-				BFD5EB692587936C00D4271B /* Auth */,
 				BFFDE3FE2570D14500F70E80 /* Info.plist */,
 				BFFDE4092570D3C500F70E80 /* Model */,
 				BFFDE40A2570D3E000F70E80 /* Repository */,
+				BFD5EB6E25879D3000D4271B /* Image */,
+				BFD5EB692587936C00D4271B /* Auth */,
 				BFD5EB5D2587696B00D4271B /* DramaList */,
 				BFD5EB6225876C3E00D4271B /* Utils */,
 				BFFDE4082570D3A100F70E80 /* Resources */,
@@ -181,7 +193,6 @@
 			isa = PBXGroup;
 			children = (
 				BFFDE40B2570D40800F70E80 /* ApiRepository.swift */,
-				BFD5EB6525877D3000D4271B /* AuthAPI.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -262,6 +273,7 @@
 				BFFDE41A2570E4D400F70E80 /* DramaDetailViewController.swift in Sources */,
 				BFFDE4102570DE8300F70E80 /* DataProvider.swift in Sources */,
 				BFD5EB6425876C5300D4271B /* Error.swift in Sources */,
+				BFD5EB722587A25900D4271B /* ImageStore.swift in Sources */,
 				BFFDE40C2570D40800F70E80 /* ApiRepository.swift in Sources */,
 				BF451DE025728F07004001BC /* DramaListCell.swift in Sources */,
 				BFD5EB6625877D3000D4271B /* AuthAPI.swift in Sources */,

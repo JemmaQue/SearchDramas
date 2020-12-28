@@ -32,7 +32,7 @@ class Drama: NSManagedObject {
     @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var rating: String
-    @NSManaged var thumbData: Data
+    @NSManaged var thumbData: Data // thumb: String
     @NSManaged var createdDate: Date
     @NSManaged var totalViews: String
     

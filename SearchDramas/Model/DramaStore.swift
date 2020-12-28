@@ -52,6 +52,7 @@ class DramaStore {
         guard let drama = NSEntityDescription.insertNewObject(forEntityName: Drama.entity(), into: backgroundContext) as? Drama else {
             return
         }
+        //ImageStore.shared.loadImage()
         drama.update(result)
     }
     

@@ -39,7 +39,8 @@ class DramaListViewController: UITableViewController {
     var loadingAlert :UIAlertController?
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
+        print(NSHomeDirectory())
         title = "The Drama List"
         settingSearchController()
         loadingAlert = startLoading()
