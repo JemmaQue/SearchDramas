@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BF451DE025728F07004001BC /* DramaListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF451DDF25728F07004001BC /* DramaListCell.swift */; };
+		BFC9906F2599C75700EBF66D /* viewsCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC9906E2599C75700EBF66D /* viewsCounter.swift */; };
 		BFD5EB5C25875D9D00D4271B /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB5B25875D9D00D4271B /* AccessToken.swift */; };
 		BFD5EB5F25876AED00D4271B /* ApiResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB5E25876AED00D4271B /* ApiResult.swift */; };
 		BFD5EB6125876BC500D4271B /* AuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5EB6025876BC500D4271B /* AuthHelper.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		BF451DDF25728F07004001BC /* DramaListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DramaListCell.swift; sourceTree = "<group>"; };
+		BFC9906E2599C75700EBF66D /* viewsCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = viewsCounter.swift; sourceTree = "<group>"; };
 		BFD5EB5B25875D9D00D4271B /* AccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
 		BFD5EB5E25876AED00D4271B /* ApiResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResult.swift; sourceTree = "<group>"; };
 		BFD5EB6025876BC500D4271B /* AuthHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHelper.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				BFFDE3F62570D14300F70E80 /* SearchDramas.xcdatamodeld */,
 				BFFDE4112570DF7700F70E80 /* Drama.swift */,
 				BFD5EB6C258793E800D4271B /* DramaStore.swift */,
+				BFC9906E2599C75700EBF66D /* viewsCounter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				BFFDE3F82570D14300F70E80 /* SearchDramas.xcdatamodeld in Sources */,
 				BFFDE4122570DF7700F70E80 /* Drama.swift in Sources */,
 				BFD5EB6D258793E800D4271B /* DramaStore.swift in Sources */,
+				BFC9906F2599C75700EBF66D /* viewsCounter.swift in Sources */,
 				BFD5EB5F25876AED00D4271B /* ApiResult.swift in Sources */,
 				BFD5EB5C25875D9D00D4271B /* AccessToken.swift in Sources */,
 			);
